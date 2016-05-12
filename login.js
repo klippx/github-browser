@@ -1,6 +1,7 @@
 'use strict';
 
-var React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 
 var {
   StyleSheet,
@@ -9,7 +10,7 @@ var {
   Text,
   TextInput,
   TouchableHighlight
-} = React;
+} = ReactNative;
 
 var Login = React.createClass({
   render() {
@@ -24,7 +25,7 @@ var Login = React.createClass({
                      placeholder="Github username" />
           <TextInput style={styles.input}
                      placeholder="Github password"
-                     secureTextEntry="true" />
+                     secureTextEntry={true} />
           <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>
               Log in
