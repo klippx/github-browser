@@ -1,2 +1,3 @@
-# github-browser
-My first react native app
+# Github Browser
+
+My first react native app...
