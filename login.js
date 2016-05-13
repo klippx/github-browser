@@ -9,10 +9,18 @@ var {
   Image,
   Text,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  ActivityIndicatorIOS
 } = ReactNative;
 
 var Login = React.createClass({
+
+  getInitialState() {
+    return {
+      showProgress: false
+    }
+  },
+
   render() {
     return (
         <View style={styles.container}>
@@ -22,17 +30,28 @@ var Login = React.createClass({
             Github Browser
           </Text>
           <TextInput style={styles.input}
+                     onChangeText={text => this.setState({username: text})}
                      placeholder="Github username" />
           <TextInput style={styles.input}
+                     onChangeText={text => this.setState({password: text})}
                      placeholder="Github password"
                      secureTextEntry={true} />
           <TouchableHighlight style={styles.button}>
-            <Text style={styles.buttonText}>
+            <Text style={styles.buttonText}
+                  onPress={this.onLoginPressed}>
               Log in
             </Text>
           </TouchableHighlight>
+          <ActivityIndicatorIOS
+              style={styles.loader}
+              animating={this.state.showProgress}
+              size="large" />
         </View>
     )
+  },
+
+  onLoginPressed() {
+    this.setState({showProgress: true})
   }
 });
 
@@ -71,6 +90,9 @@ var styles = StyleSheet.create({
     fontSize: 22,
     alignSelf: 'center',
     color: 'white'
+  },
+  loader: {
+    marginTop: 20
   }
 });
 
