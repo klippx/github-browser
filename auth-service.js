@@ -19,7 +19,7 @@ class AuthService {
         unknownError: response.status != 401
       }
     }).then(results => {
-      return cb({success: trues})
+      return cb({success: true})
     }).catch(error => {
       return cb(error)
     }).finally(()=> {

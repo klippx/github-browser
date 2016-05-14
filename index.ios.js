@@ -14,13 +14,31 @@ import {
 
 var Login = require('./login');
 
-class GithubBrowser extends Component {
+var GithubBrowser = React.createClass({
+  getInitialState() {
+    return {
+      isLoggedIn: false
+    }
+  },
+
   render() {
-    return (
-      <Login />
-    );
+    if (this.state.isLoggedIn) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.welcome}>Logged in</Text>
+        </View>
+      )
+    } else {
+      return (
+        <Login onLogin={this.onLogin} />
+      )
+    }
+  },
+
+  onLogin() {
+    this.setState({isLoggedIn: true})
   }
-}
+});
 
 const styles = StyleSheet.create({
   container: {

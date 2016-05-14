@@ -68,7 +68,13 @@ var Login = React.createClass({
   onLoginPressed() {
     this.setState({showProgress: true})
     var authService = require('./auth-service');
-    authService.login(this.state, this.setState.bind(this));
+    authService.login(this.state, result => {
+      this.setState(result);
+
+      if (result.success && this.props.onLogin) {
+        this.props.onLogin();
+      }
+    });
   }
 });
 
