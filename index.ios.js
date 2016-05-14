@@ -9,19 +9,41 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ActivityIndicatorIOS
 } from 'react-native';
 
 var Login = require('./login');
+var AuthService = require('./auth-service');
 
 var GithubBrowser = React.createClass({
+  componentDidMount() {
+    AuthService.getAuthInfo((error, authInfo) => {
+      this.setState({
+        checkingAuth: false,
+        isLoggedIn: !!authInfo
+      })
+    })
+  },
+
   getInitialState() {
     return {
-      isLoggedIn: false
+      isLoggedIn: false,
+      checkingAuth: true
     }
   },
 
   render() {
+    if (this.state.checkingAuth) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicatorIOS style={styles.loader}
+            animating={true}
+            size="large" />
+        </View>
+      )
+    }
+
     if (this.state.isLoggedIn) {
       return (
         <View style={styles.container}>

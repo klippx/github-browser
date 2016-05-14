@@ -24,16 +24,19 @@ var Login = React.createClass({
 
   render() {
     var errorCtrl = <View />;
+
     if (!this.state.success && this.state.badCredentials) {
       errorCtrl = <Text style={styles.error}>
         That username and password did not work!
       </Text>
     }
+
     if (!this.state.success && this.state.unknownError) {
       errorCtrl = <Text style={styles.error}>
         We experienced an unexpected issue when logging in.
       </Text>
     }
+
     return (
         <View style={styles.container}>
           <Image style={styles.logo}
