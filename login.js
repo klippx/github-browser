@@ -67,28 +67,8 @@ var Login = React.createClass({
 
   onLoginPressed() {
     this.setState({showProgress: true})
-
-    var encodedAuth = new Buffer
-      .Buffer(`${this.state.username}:${this.state.password}`)
-      .toString('base64')
-
-    fetch('https://api.github.com/user', {
-      headers: { 'Authorization' : `Basic ${encodedAuth}` }
-    }).then(response => {
-      if (response.status >= 200 && response.status < 300) {
-        return response
-      }
-      throw {
-        badCredentials: response.status == 401,
-        unknownError: response.status != 401
-      }
-    }).then(results => {
-      this.setState({success: trues})
-    }).catch(error => {
-      this.setState(error)
-    }).finally(()=> {
-      this.setState({showProgress: false})
-    })
+    var authService = require('./auth-service');
+    authService.login(this.state, this.setState.bind(this));
   }
 });
 
