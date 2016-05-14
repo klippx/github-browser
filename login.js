@@ -2,6 +2,7 @@
 
 var React = require('react');
 var ReactNative = require('react-native');
+var Buffer = require('buffer');
 
 var {
   StyleSheet,
@@ -22,6 +23,17 @@ var Login = React.createClass({
   },
 
   render() {
+    var errorCtrl = <View />;
+    if (!this.state.success && this.state.badCredentials) {
+      errorCtrl = <Text style={styles.error}>
+        That username and password did not work!
+      </Text>
+    }
+    if (!this.state.success && this.state.unknownError) {
+      errorCtrl = <Text style={styles.error}>
+        We experienced an unexpected issue when logging in.
+      </Text>
+    }
     return (
         <View style={styles.container}>
           <Image style={styles.logo}
@@ -42,6 +54,9 @@ var Login = React.createClass({
               Log in
             </Text>
           </TouchableHighlight>
+
+          {errorCtrl}
+
           <ActivityIndicatorIOS
               style={styles.loader}
               animating={this.state.showProgress}
@@ -52,6 +67,28 @@ var Login = React.createClass({
 
   onLoginPressed() {
     this.setState({showProgress: true})
+
+    var encodedAuth = new Buffer
+      .Buffer(`${this.state.username}:${this.state.password}`)
+      .toString('base64')
+
+    fetch('https://api.github.com/user', {
+      headers: { 'Authorization' : `Basic ${encodedAuth}` }
+    }).then(response => {
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      }
+      throw {
+        badCredentials: response.status == 401,
+        unknownError: response.status != 401
+      }
+    }).then(results => {
+      this.setState({success: trues})
+    }).catch(error => {
+      this.setState(error)
+    }).finally(()=> {
+      this.setState({showProgress: false})
+    })
   }
 });
 
@@ -93,7 +130,12 @@ var styles = StyleSheet.create({
   },
   loader: {
     marginTop: 20
+  },
+  error: {
+    marginTop: 20,
+    color: 'red'
   }
+
 });
 
 module.exports = Login;
