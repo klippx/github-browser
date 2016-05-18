@@ -8,7 +8,8 @@ var {
   View,
   ListView,
   StyleSheet,
-  ActivityIndicatorIOS
+  ActivityIndicatorIOS,
+  Image
 } = ReactNative;
 
 var Feed = React.createClass({
@@ -32,8 +33,10 @@ var Feed = React.createClass({
       fetch(url, { headers: authInfo.headers })
         .then(response => response.json())
         .then(responseData => {
+          console.log(responseData)
+          var watchEvents = responseData.filter(e => e.type === 'WatchEvent');
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(responseData),
+            dataSource: this.state.dataSource.cloneWithRows(watchEvents),
             showProgress: false
           })
         })
@@ -42,9 +45,16 @@ var Feed = React.createClass({
   },
 
   renderRow(rowData) {
-    return <Text style={styles.listViewRow}>
-      {rowData.actor.login}
-    </Text>
+    return <View style={styles.listViewRow}>
+      <Image
+        style={styles.listViewRow__avatar}
+        source={{uri: rowData.actor.avatar_url}} />
+      <View style={styles.listViewRow__stackedBox}>
+        <Text style={styles.listViewRow__stackedBox_text}>{rowData.created_at}</Text>
+        <Text style={styles.listViewRow__stackedBox_text}>{rowData.actor.login}</Text>
+        <Text style={styles.listViewRow__stackedBox_text}>{rowData.payload.action}</Text>
+      </View>
+    </View>
   },
 
   render() {
@@ -80,8 +90,22 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   listViewRow: {
-    color: '#333',
-    alignSelf: 'center'
+    flex: 1,
+    flexDirection: 'row',
+    padding: 20,
+    alignItems: 'center',
+    borderColor: '#d7d7d7',
+    borderBottomWidth: 1
+  },
+  listViewRow__avatar: {
+    height: 36,
+    width: 36,
+    borderRadius: 18
+  },
+  listViewRow__stackedBox: {
+    paddingLeft: 20
+  },
+  listViewRow__stackedBox_text: {
   }
 });
 
