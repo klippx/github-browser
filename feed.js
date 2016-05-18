@@ -7,7 +7,8 @@ var {
   Text,
   View,
   ListView,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicatorIOS
 } = ReactNative;
 
 var Feed = React.createClass({
@@ -16,17 +17,47 @@ var Feed = React.createClass({
       rowHasChanged: (r1, r2) => r1 != r2
     });
     return {
-      dataSource: dataSource.cloneWithRows(['A', 'B', 'C'])
+      dataSource: dataSource,
+      showProgress: true
     }
+  },
+
+  componentDidMount() {
+    this.fetchFeed();
+  },
+
+  fetchFeed() {
+    require('./auth-service').getAuthInfo((err, authInfo) => {
+      var url = `https://api.github.com/users/${authInfo.user.login}/received_events`;
+      fetch(url, { headers: authInfo.headers })
+        .then(response => response.json())
+        .then(responseData => {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(responseData),
+            showProgress: false
+          })
+        })
+        .catch(console.error);
+    })
   },
 
   renderRow(rowData) {
     return <Text style={styles.listViewRow}>
-      {rowData}
+      {rowData.actor.login}
     </Text>
   },
 
   render() {
+    if (this.state.showProgress) {
+      return (
+        <View style={styles.spinner}>
+          <ActivityIndicatorIOS
+            size="large"
+            animating={true}
+            />
+        </View>
+      )
+    }
 
     return (
       <View style={styles.container}>
@@ -40,6 +71,10 @@ var Feed = React.createClass({
 });
 
 const styles = StyleSheet.create({
+  spinner: {
+    flex: 1,
+    justifyContent: 'center'
+  },
   container: {
     flex: 1,
     justifyContent: 'flex-start'
