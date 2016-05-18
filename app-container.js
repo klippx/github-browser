@@ -2,8 +2,8 @@
 
 var React = require('react');
 var ReactNative = require('react-native');
-import Icon from 'react-native-vector-icons/FontAwesome';
-const myIcon = (<Icon name="rocket" size={30} color="#900" />)
+var Icon = require('react-native-vector-icons/FontAwesome');
+var Feed = require('./feed');
 
 var {
   Text,
@@ -28,9 +28,7 @@ var AppContainer = React.createClass({
                         iconSize={30}
                         selected={this.state.selectedTab == 'feed'}
                         onPress={() => this.setState({selectedTab: 'feed'})}>
-          <Text style={styles.welcome}>
-            Feed
-          </Text>
+          <Feed />
         </Icon.TabBarItemIOS>
         <Icon.TabBarItemIOS title='Search'
                         iconName='search'
