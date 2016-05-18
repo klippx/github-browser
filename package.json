@@ -8,6 +8,7 @@
   "dependencies": {
     "buffer": "^4.6.0",
     "lodash": "^3.10.1",
+    "moment": "^2.13.0",
     "react": "^0.14.8",
     "react-native": "^0.25.1",
     "react-native-vector-icons": "^2.0.2"

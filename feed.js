@@ -2,6 +2,7 @@
 
 var React = require('react');
 var ReactNative = require('react-native');
+var moment = require('moment');
 
 var {
   Text,
@@ -50,9 +51,10 @@ var Feed = React.createClass({
         style={styles.listViewRow__avatar}
         source={{uri: rowData.actor.avatar_url}} />
       <View style={styles.listViewRow__stackedBox}>
-        <Text style={styles.listViewRow__stackedBox_text}>{rowData.created_at}</Text>
-        <Text style={styles.listViewRow__stackedBox_text}>{rowData.actor.login}</Text>
-        <Text style={styles.listViewRow__stackedBox_text}>{rowData.payload.action}</Text>
+        <Text style={styles.listViewRow__stackedBox_text}>{moment(rowData.created_at).fromNow()}</Text>
+        <Text style={styles.listViewRow__stackedBox_bold}>{rowData.actor.login}</Text>
+        <Text style={styles.listViewRow__stackedBox_text}>{rowData.payload.action} watching</Text>
+        <Text style={styles.listViewRow__stackedBox_bold}>{rowData.repo.name}</Text>
       </View>
     </View>
   },
@@ -105,7 +107,8 @@ const styles = StyleSheet.create({
   listViewRow__stackedBox: {
     paddingLeft: 20
   },
-  listViewRow__stackedBox_text: {
+  listViewRow__stackedBox_bold: {
+    fontWeight: '600'
   }
 });
 
