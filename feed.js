@@ -10,7 +10,8 @@ var {
   ListView,
   StyleSheet,
   ActivityIndicatorIOS,
-  Image
+  Image,
+  TouchableHighlight
 } = ReactNative;
 
 var Feed = React.createClass({
@@ -45,18 +46,29 @@ var Feed = React.createClass({
     })
   },
 
+  pressRow(rowData) {
+    console.log(rowData);
+  },
+
   renderRow(rowData) {
-    return <View style={styles.listViewRow}>
-      <Image
-        style={styles.listViewRow__avatar}
-        source={{uri: rowData.actor.avatar_url}} />
-      <View style={styles.listViewRow__stackedBox}>
-        <Text style={styles.listViewRow__stackedBox_text}>{moment(rowData.created_at).fromNow()}</Text>
-        <Text style={styles.listViewRow__stackedBox_bold}>{rowData.actor.login}</Text>
-        <Text style={styles.listViewRow__stackedBox_text}>{rowData.payload.action} watching</Text>
-        <Text style={styles.listViewRow__stackedBox_bold}>{rowData.repo.name}</Text>
-      </View>
-    </View>
+    return (
+      <TouchableHighlight
+        onPress={() => this.pressRow(rowData)}
+        underLayColor='#ddd'
+      >
+        <View style={styles.listViewRow}>
+          <Image
+            style={styles.listViewRow__avatar}
+            source={{uri: rowData.actor.avatar_url}} />
+          <View style={styles.listViewRow__stackedBox}>
+            <Text style={styles.listViewRow__stackedBox_text}>{moment(rowData.created_at).fromNow()}</Text>
+            <Text style={styles.listViewRow__stackedBox_bold}>{rowData.actor.login}</Text>
+            <Text style={styles.listViewRow__stackedBox_text}>{rowData.payload.action} watching</Text>
+            <Text style={styles.listViewRow__stackedBox_bold}>{rowData.repo.name}</Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
   },
 
   render() {
