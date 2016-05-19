@@ -3,6 +3,7 @@
 var React = require('react');
 var ReactNative = require('react-native');
 var moment = require('moment');
+var PushPayload = require('./push-payload');
 
 var {
   Text,
@@ -36,7 +37,6 @@ var Feed = React.createClass({
         .then(response => response.json())
         .then(responseData => {
           var pushEvents = responseData.filter(e => e.type === 'PushEvent');
-          console.log(pushEvents);
           this.setState({
             dataSource: this.state.dataSource.cloneWithRows(pushEvents),
             showProgress: false
@@ -47,7 +47,13 @@ var Feed = React.createClass({
   },
 
   pressRow(rowData) {
-    console.log(rowData);
+    this.props.navigator.push({
+      title: 'Push Event',
+      component: PushPayload,
+      passProps: {
+        pushEvent: rowData
+      }
+    });
   },
 
   renderRow(rowData) {
@@ -63,7 +69,7 @@ var Feed = React.createClass({
           <View style={styles.listViewRow__stackedBox}>
             <Text style={styles.listViewRow__stackedBox_text}>{moment(rowData.created_at).fromNow()}</Text>
             <Text style={styles.listViewRow__stackedBox_bold}>{rowData.actor.login}</Text>
-            <Text style={styles.listViewRow__stackedBox_text}>pushed to {rowData.payload.ref} at</Text>
+            <Text style={styles.listViewRow__stackedBox_text}>pushed to {rowData.payload.ref.replace('refs/heads/','')} at</Text>
             <Text style={styles.listViewRow__stackedBox_bold}>{rowData.repo.name}</Text>
           </View>
         </View>

@@ -30,10 +30,10 @@ var AppContainer = React.createClass({
                         selected={this.state.selectedTab == 'feed'}
                         onPress={() => this.setState({selectedTab: 'feed'})}>
           <NavigatorIOS
-            styles={styles.feedNavigation}
+            style={styles.feedNavigation}
             initialRoute={{
-              component: Feed,
-              title: 'Feed'
+              title: 'Feed',
+              component: Feed
             }} />
         </Icon.TabBarItemIOS>
         <Icon.TabBarItemIOS title='Search'
@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   feedNavigation: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'flex-start',
   },
 });
 
