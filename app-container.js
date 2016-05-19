@@ -9,7 +9,8 @@ var {
   Text,
   View,
   StyleSheet,
-  TabBarIOS
+  TabBarIOS,
+  NavigatorIOS
 } = ReactNative;
 
 var AppContainer = React.createClass({
@@ -28,7 +29,12 @@ var AppContainer = React.createClass({
                         iconSize={30}
                         selected={this.state.selectedTab == 'feed'}
                         onPress={() => this.setState({selectedTab: 'feed'})}>
-          <Feed />
+          <NavigatorIOS
+            styles={styles.feedNavigation}
+            initialRoute={{
+              component: Feed,
+              title: 'Feed'
+            }} />
         </Icon.TabBarItemIOS>
         <Icon.TabBarItemIOS title='Search'
                         iconName='search'
@@ -55,6 +61,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
+  },
+  feedNavigation: {
+    flex: 1
   },
 });
 

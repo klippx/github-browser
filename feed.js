@@ -35,10 +35,10 @@ var Feed = React.createClass({
       fetch(url, { headers: authInfo.headers })
         .then(response => response.json())
         .then(responseData => {
-          console.log(responseData)
-          var watchEvents = responseData.filter(e => e.type === 'WatchEvent');
+          var pushEvents = responseData.filter(e => e.type === 'PushEvent');
+          console.log(pushEvents);
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(watchEvents),
+            dataSource: this.state.dataSource.cloneWithRows(pushEvents),
             showProgress: false
           })
         })
@@ -63,7 +63,7 @@ var Feed = React.createClass({
           <View style={styles.listViewRow__stackedBox}>
             <Text style={styles.listViewRow__stackedBox_text}>{moment(rowData.created_at).fromNow()}</Text>
             <Text style={styles.listViewRow__stackedBox_bold}>{rowData.actor.login}</Text>
-            <Text style={styles.listViewRow__stackedBox_text}>{rowData.payload.action} watching</Text>
+            <Text style={styles.listViewRow__stackedBox_text}>pushed to {rowData.payload.ref} at</Text>
             <Text style={styles.listViewRow__stackedBox_bold}>{rowData.repo.name}</Text>
           </View>
         </View>
