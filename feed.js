@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    paddingTop: 60
   },
   listViewRow: {
     flex: 1,

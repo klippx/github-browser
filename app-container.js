@@ -21,7 +21,6 @@ var AppContainer = React.createClass({
   },
 
   render() {
-
     return (
       <TabBarIOS style={styles.container}>
         <Icon.TabBarItemIOS title='Feed'

@@ -15,3 +15,11 @@ If you cant try it out just look at this pictures instead :+1:
 ### Login screen
 
 ![Image of login screen](images/login.png)
+
+### Feed
+
+![Image of feed](images/feed.png)
+
+### Feed item
+
+![Image of feed](images/feed-item.png)
