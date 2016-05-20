@@ -23,16 +23,25 @@ var SearchResult = React.createClass({
     }
   },
 
-  renderRow(rowData) {
-    return (
-      <View style={styles.row_container}>
-        <Text>
-          <Text style={styles.bold}>
-            {rowData.sha.substring(0,6)}
-          </Text> - {rowData.message}
-        </Text>
-      </View>
-    )
+  componentDidMount() {
+    console.log(`searching for ${this.state.searchQuery}`);
+    this.doSearch(this.state.searchQuery)
+  },
+
+  doSearch(query) {
+    require('./auth-service').getAuthInfo((err, authInfo) => {
+      var url = `https://api.github.com/search/repositories/${query}`;
+      fetch(url, { headers: authInfo.headers })
+        .then(response => response.json())
+        .then(responseData => {
+          var pushEvents = responseData.filter(e => e.type === 'PushEvent');
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(pushEvents),
+            showProgress: false
+          })
+        })
+        .catch(console.error);
+    })
   },
 
   render() {

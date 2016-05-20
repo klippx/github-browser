@@ -18,7 +18,7 @@ var {
 var Search = React.createClass({
   getInitialState() {
     return {
-      query: null
+      query: ''
     }
   },
 
@@ -52,7 +52,7 @@ var Search = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60,
+    paddingTop: 70,
     padding: 10,
     alignItems: 'center'
   },

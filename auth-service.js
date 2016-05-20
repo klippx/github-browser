@@ -3,6 +3,7 @@
 var Buffer = require('buffer');
 var ReactNative = require('react-native');
 var _ = require('lodash');
+
 var {
   AsyncStorage
 } = ReactNative;
@@ -12,7 +13,7 @@ const userKey = 'user';
 
 class AuthService {
   getAuthInfo(cb) {
-    AsyncStorage.multiGet([authKey, userKey], (error, value) =>{
+    AsyncStorage.multiGet([authKey, userKey], (error, value) => {
       if (error) { return cb(error) }
       if (!value) { return cb() }
 
