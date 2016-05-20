@@ -4,6 +4,7 @@ var React = require('react');
 var ReactNative = require('react-native');
 var Icon = require('react-native-vector-icons/FontAwesome');
 var Feed = require('./feed');
+var Search = require('./search');
 
 var {
   Text,
@@ -40,9 +41,12 @@ var AppContainer = React.createClass({
                         iconSize={30}
                         selected={this.state.selectedTab == 'search'}
                         onPress={() => this.setState({selectedTab: 'search'})}>
-          <Text style={styles.welcome}>
-            Search
-          </Text>
+          <NavigatorIOS
+            style={styles.feedNavigation}
+            initialRoute={{
+              title: 'Search',
+              component: Search
+            }} />
         </Icon.TabBarItemIOS>
       </TabBarIOS>
     )
