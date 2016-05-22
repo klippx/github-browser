@@ -18,11 +18,16 @@ var {
 var Search = React.createClass({
   getInitialState() {
     return {
-      query: ''
+      query: '',
+      queryTooShort: false
     }
   },
 
   onSearchPressed() {
+    if (!this.state.query.length) {
+      this.setState({ queryTooShort: true });
+      return;
+    }
     this.props.navigator.push({
       title: 'Search results',
       component: SearchResults,
@@ -33,6 +38,14 @@ var Search = React.createClass({
   },
 
   render() {
+    var errorCtrl = <View />;
+
+    if (this.state.queryTooShort) {
+      errorCtrl = <Text style={styles.error}>
+        That query is too short, try again.
+      </Text>
+    }
+
     return (
       <View style={styles.container}>
         <TextInput style={styles.input}
@@ -44,6 +57,8 @@ var Search = React.createClass({
            Search
          </Text>
        </TouchableHighlight>
+
+       { errorCtrl }
       </View>
     )
   }
@@ -75,6 +90,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: 'white'
   },
+  error: {
+    marginTop: 20,
+    color: 'red'
+  }
 });
 
 module.exports = Search;
