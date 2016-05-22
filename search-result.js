@@ -24,6 +24,7 @@ var SearchResult = React.createClass({
     return {
       dataSource: dataSource,
       searchQuery: this.props.searchQuery,
+      emptyResult: false,
       showProgress: true
     }
   },
@@ -40,6 +41,7 @@ var SearchResult = React.createClass({
       .then(responseData => {
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(responseData.items),
+          emptyResult: !responseData.items.length
         })
       })
       .catch(console.error)
@@ -82,12 +84,22 @@ var SearchResult = React.createClass({
       return (
         <View style={styles.container}>
           <Text style={styles.text}>
-            Searching for {this.state.searchQuery}...
+            Searching for "{this.state.searchQuery}"...
           </Text>
           <ActivityIndicatorIOS
             size="large"
             animating={true}
             />
+        </View>
+      )
+    }
+
+    if (this.state.emptyResult) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.text}>
+            No results for "{this.state.searchQuery}"
+          </Text>
         </View>
       )
     }
