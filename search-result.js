@@ -29,22 +29,21 @@ var SearchResult = React.createClass({
   },
 
   componentDidMount() {
-    this.doSearch(this.state.searchQuery)
+    this.doSearch()
   },
 
-  doSearch(query) {
-    AuthService.getAuthInfo((err, authInfo) => {
-      var url = `https://api.github.com/search/repositories?q=${query}`;
-      AuthService.fetchWrapper(url, authInfo.header)
-        .then(response => response.json())
-        .then(responseData => {
-          this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(responseData.items),
-            showProgress: false
-          })
+  doSearch() {
+    var query = encodeURIComponent(this.state.searchQuery);
+    var url = `https://api.github.com/search/repositories?q=${query}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(responseData => {
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(responseData.items),
         })
-        .catch(console.error);
-    })
+      })
+      .catch(console.error)
+      .finally(() => this.setState({ showProgress: false }));
   },
 
   pressRow(rowData) {
@@ -114,14 +113,17 @@ const styles = StyleSheet.create({
   text: {
     paddingTop: 20,
     paddingBottom: 20,
+    alignSelf: 'center',
     fontSize: 20
   },
   listViewRow: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
     borderColor: '#d7d7d7',
     paddingVertical: 10,
+    paddingHorizontal: 20,
     borderBottomWidth: 1
   },
   boldText: {
@@ -129,13 +131,11 @@ const styles = StyleSheet.create({
   },
   listViewRow__repository: {
     flex: 3,
-    paddingHorizontal: 20,
     overflow: 'hidden'
   },
   listViewRow__iconWithText: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20,
   },
 });
 
