@@ -3,14 +3,18 @@
 var React = require('react');
 var ReactNative = require('react-native');
 var moment = require('moment');
+var Icon = require('react-native-vector-icons/FontAwesome');
 
 var {
   Text,
   View,
   ListView,
   StyleSheet,
-  Image
+  ActivityIndicatorIOS,
+  TouchableHighlight
 } = ReactNative;
+
+var AuthService = require('./auth-service');
 
 var SearchResult = React.createClass({
   getInitialState() {
@@ -19,7 +23,8 @@ var SearchResult = React.createClass({
     });
     return {
       dataSource: dataSource,
-      searchQuery: this.props.searchQuery
+      searchQuery: this.props.searchQuery,
+      showProgress: true
     }
   },
 
@@ -29,14 +34,13 @@ var SearchResult = React.createClass({
   },
 
   doSearch(query) {
-    require('./auth-service').getAuthInfo((err, authInfo) => {
-      var url = `https://api.github.com/search/repositories/${query}`;
-      fetch(url, { headers: authInfo.headers })
+    AuthService.getAuthInfo((err, authInfo) => {
+      var url = `https://api.github.com/search/repositories?q=${query}`;
+      AuthService.fetchWrapper(url, authInfo.header)
         .then(response => response.json())
         .then(responseData => {
-          var pushEvents = responseData.filter(e => e.type === 'PushEvent');
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(pushEvents),
+            dataSource: this.state.dataSource.cloneWithRows(responseData.items),
             showProgress: false
           })
         })
@@ -44,12 +48,58 @@ var SearchResult = React.createClass({
     })
   },
 
+  pressRow(rowData) {
+    console.log(rowData)
+  },
+
+  renderRow(rowData) {
+    console.log('renderRow');
+    return (
+      <TouchableHighlight
+        onPress={() => this.pressRow(rowData)}
+        underLayColor='#ddd'
+      >
+        <View style={styles.listViewRow}>
+          <View style={styles.listViewRow__stackedBox_repository}>
+            <Text style={styles.listViewRow__stackedBox_bold}>Repository</Text>
+            <Text>{rowData.full_name}</Text>
+          </View>
+
+          <View style={styles.listViewRow__stackedBox_iconWithText}>
+            <Icon name='star-o' size={20} />
+            <Text>{rowData.stargazers_count}</Text>
+          </View>
+
+          <View style={styles.listViewRow__stackedBox_iconWithText}>
+            <Icon name='code-fork' size={20} />
+            <Text>{rowData.forks_count}</Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
+  },
+
   render() {
+    if (this.state.showProgress) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.text}>
+            Searching for {this.state.searchQuery}...
+          </Text>
+          <ActivityIndicatorIOS
+            size="large"
+            animating={true}
+            />
+        </View>
+      )
+    }
+
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>
-          You searched for {this.state.searchQuery}
-        </Text>
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow}
+          />
       </View>
     )
   }
@@ -62,33 +112,31 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
-  row_container: {
-    flex: 1,
-    justifyContent: 'center',
-    borderColor: '#d7d7d7',
-    borderTopWidth: 1,
-    paddingTop: 20,
-    paddingBottom: 20,
-    padding: 10
-  },
-  bold: {
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
   text: {
     paddingTop: 20,
     paddingBottom: 20,
     fontSize: 20
   },
-  commits: {
-    paddingTop: 40,
-    fontSize: 20
+  listViewRow: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 20,
+    alignItems: 'center',
+    borderColor: '#d7d7d7',
+    borderBottomWidth: 1
   },
-  avatar: {
-    height: 120,
-    width: 120,
-    borderRadius: 60
+  listViewRow__stackedBox_bold: {
+    fontWeight: '600'
+  },
+  listViewRow__stackedBox_repository: {
+    padding: 20,
+  },
+  listViewRow__stackedBox_iconWithText: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 20,
   }
+
 });
 
 module.exports = SearchResult;
