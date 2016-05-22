@@ -29,7 +29,6 @@ var SearchResult = React.createClass({
   },
 
   componentDidMount() {
-    console.log(`searching for ${this.state.searchQuery}`);
     this.doSearch(this.state.searchQuery)
   },
 
@@ -49,28 +48,28 @@ var SearchResult = React.createClass({
   },
 
   pressRow(rowData) {
+    console.log('pressRow')
     console.log(rowData)
   },
 
   renderRow(rowData) {
-    console.log('renderRow');
     return (
       <TouchableHighlight
         onPress={() => this.pressRow(rowData)}
         underLayColor='#ddd'
       >
         <View style={styles.listViewRow}>
-          <View style={styles.listViewRow__stackedBox_repository}>
-            <Text style={styles.listViewRow__stackedBox_bold}>Repository</Text>
+          <View style={styles.listViewRow__repository}>
+            <Text style={styles.boldText}>Repository</Text>
             <Text>{rowData.full_name}</Text>
           </View>
 
-          <View style={styles.listViewRow__stackedBox_iconWithText}>
+          <View style={styles.listViewRow__iconWithText}>
             <Icon name='star-o' size={20} />
             <Text>{rowData.stargazers_count}</Text>
           </View>
 
-          <View style={styles.listViewRow__stackedBox_iconWithText}>
+          <View style={styles.listViewRow__iconWithText}>
             <Icon name='code-fork' size={20} />
             <Text>{rowData.forks_count}</Text>
           </View>
@@ -110,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 80,
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'stretch'
   },
   text: {
     paddingTop: 20,
@@ -120,23 +119,24 @@ const styles = StyleSheet.create({
   listViewRow: {
     flex: 1,
     flexDirection: 'row',
-    padding: 20,
-    alignItems: 'center',
+    flexWrap: 'wrap',
     borderColor: '#d7d7d7',
+    paddingVertical: 10,
     borderBottomWidth: 1
   },
-  listViewRow__stackedBox_bold: {
+  boldText: {
     fontWeight: '600'
   },
-  listViewRow__stackedBox_repository: {
-    padding: 20,
+  listViewRow__repository: {
+    flex: 3,
+    paddingHorizontal: 20,
+    overflow: 'hidden'
   },
-  listViewRow__stackedBox_iconWithText: {
+  listViewRow__iconWithText: {
     flex: 1,
     alignItems: 'center',
-    padding: 20,
-  }
-
+    paddingHorizontal: 20,
+  },
 });
 
 module.exports = SearchResult;
